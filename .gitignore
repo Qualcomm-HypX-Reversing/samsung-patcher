@@ -1,0 +1,4 @@
+/target
+kernel_patch/patch.o
+patched_kernel
+patched_vmlinux
