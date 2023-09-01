@@ -1,6 +1,6 @@
 # Samsung Patcher
 
-This piece of software allows you to patch a samsung binary with any kernel patch WITHOUT SOURCES. 
+This piece of software allows you to patch a samsung kernel binary WITHOUT SOURCES. 
 
 The binary takes in two files a kernel ELF (This should be produced via the `vmlinux-to-elf` tool from the bootimg) as well as a patch object file. 
 
