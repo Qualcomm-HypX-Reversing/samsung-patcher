@@ -18,6 +18,15 @@ x0 - x7, contains the desired parameters
 .equ FULCRUM, 0xf1 //write
 .equ PLUG, 0xf2 //execute
 .equ IGOT5THINGSTOSAY, 0xf3 //symbol
+.equ OBLIVIATE, 0xf4 //readb
+.equ EXQUISITE, 0xf5 //readw
+.equ FADEDTHANAHOE, 0xf6 //readl
+.equ SHALLWE, 0xf7 //readq
+.equ BLINKERTONCITY, 0xf8 //writeb
+.equ YOUFEELME, 0xf9 //writew
+.equ CHEERSMYFRIENDS, 0xfa //writel
+.equ STIIZYPODS, 0xfb //writeq
+
 
 
 .equ X0_OFF, 0x0
@@ -35,11 +44,7 @@ Faded syscall format:
 
 x8 (Syscall number) = 0xfaded
 
-x0 - command code 
-    0xf0 = PENJAMINCITY (arb read)
-    0xf1 = FULCRUM (arb write)
-    0xf2 = PLUG (arb execute)
-    0xf3 = IGOT5THINGSTOSAY (symbolification)
+x0 - command code (Look above)
 
     x1 - x7 - arguments
 
@@ -70,6 +75,22 @@ _start:
     b.eq plug
     cmp x25, #IGOT5THINGSTOSAY
     b.eq igot5thingstosay
+    cmp x25, #OBLIVIATE
+    b.eq obliviate
+    cmp x25, #EXQUISITE
+    b.eq exquisite
+    cmp x25, #FADEDTHANAHOE
+    b.eq fadedthanahoe
+    cmp x25, #SHALLWE
+    b.eq shallwe
+    cmp x25, #BLINKERTONCITY
+    b.eq blinkertoncity
+    cmp x25, #YOUFEELME
+    b.eq youfeelme
+    cmp x25, #CHEERSMYFRIENDS
+    b.eq cheersmyfriends
+    cmp x25, #STIIZYPODS
+    b.eq stiizypods
 
     
 normal:
@@ -81,7 +102,7 @@ normal:
 
 
 penjamin:
-//read from kernelspace. The parameters are equivalent of memcpy: x0 = dest, x1=src, x2=size. src should be a kernelspace pointer, dest should be a user space ptr
+//read from kernelspace. The parameters are equivalent of memcpy: x1 = dest, x2=src, x3=size. src should be a kernelspace pointer, dest should be a user space ptr
 
     ldr x0, [x24, #X1_OFF]
     ldr x1, [x24, #X2_OFF]
@@ -92,7 +113,7 @@ penjamin:
 
     b out
 fulcrum:
-//write to kernelspace. equivalent of memcpy, x0 = dest, x0 = src, x2 = size. dest should be a kernelspace pointer, src should be a 
+//write to kernelspace. equivalent of memcpy, x1 = dest, x2 = src, x3 = size. dest should be a kernelspace pointer, src should be a userspace pointer
 
     ldr x0, [x24, #X1_OFF]
     ldr x1, [x24, #X2_OFF]
@@ -137,6 +158,68 @@ igot5thingstosay:
     ldr x0, [sp], #0x10 //load the buffer and restore the stack
     bl kfree //free the buffer
     b out
+
+obliviate:
+//readb - x1: io address (Should be uncacheable)
+    ldr x0, [x24, #X1_OFF]
+    ldrb w0, [x0]
+    str x0, [x24, #X0_OFF]
+    b out
+
+exquisite:
+//readl - x1: io address
+    ldr x0, [x24, #X1_OFF]
+    ldrh w0, [x0]
+    str x0, [x24, #X0_OFF]
+    b out
+
+fadedthanahoe:
+//readw - x1: io address
+    ldr x0, [x24, #X1_OFF]
+    ldr w0, [x0]
+    str x0, [x24, #X0_OFF]
+    b out
+
+shallwe:
+//readq - x1: io address
+    ldr x0, [x24, #X1_OFF]
+    ldr x0, [x0]
+    str x0, [x24, #X0_OFF]
+    b out
+
+blinkertoncity:
+//writeb - x1: io address, x2: thing to store
+    ldr x0, [x24, #X1_OFF]
+    ldrb w1, [x24, #X2_OFF] //we need only load the first byte
+    strb w1, [x0]
+    b out
+
+youfeelme:
+//writew - x1: io address, x2: thing to store
+    ldr x0, [x24, #X1_OFF]
+    ldrh w1, [x24, #X2_OFF] //we need only load the first two bytes
+    strh w1, [x0]
+    b out
+
+cheersmyfriends:
+//writel - x1: io address: x2 thing to store
+    ldr x0, [x24, #X1_OFF]
+    ldr w1, [x24, #X2_OFF] //we need only load the first 4 byte
+    str w1, [x0]
+    b out
+
+stiizypods:
+//writeq - x1: io address: x2 thing to store
+    ldr x0, [x24, #X1_OFF]
+    ldr x1, [x24, #X2_OFF] //we need only load the first 4 byte
+    str x1, [x0]
+    b out
+
+
+    
+
+
+
 
 
 //at this point we don't really care what the values of the registers are as they will be popped before eret

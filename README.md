@@ -2,9 +2,9 @@
 
 This piece of software allows you to patch a samsung kernel binary WITHOUT SOURCES. 
 
-The binary takes in two files a kernel ELF (This should be produced via the `vmlinux-to-elf` tool from the bootimg) as well as a patch object file. 
+The binary takes in two files: a kernel ELF (For more info on this, read Using this tool) as well as a patch object file. 
 
-The patch object file used in this case was `kernel_patch/patch.o`. This file can be generated via running `make all` in `kernel_patch`. Note the `aarch64-linux-gnu-*` toolchain is required. 
+The patch object file used in this case was `kernel_patch/patch.o`. This file can be generated via running `make all` in `kernel_patch`. Note that the `aarch64-linux-gnu-*` toolchain is required. 
 
 This patch (Found in `patch.S`) modifies `el0_svc` to provide full kernel read, write, and execute. 
 
@@ -17,7 +17,7 @@ The kernel ELF can be obtained by obtaining the `boot.img` file (Usually include
 
 Once you have run `unpack_bootimg.py` the output folder should have a file called `kernel`. That is your kernel image.
 
-From here, download `vmlinux-to-elf` (Found here: https://github.com/marin-m/vmlinux-to-elf) and run `vmlinux-to-elf` on the kernel binary. This should output a ELF file. 
+From here, download `vmlinux-to-elf` (Found here: https://github.com/marin-m/vmlinux-to-elf) and run `vmlinux-to-elf` on the kernel binary. This should output a ELF file. This is your kernel ELF. 
 
 From here run `cargo run [elf file] [patch file]` to obtain a new kernel image. There will be two output files. The first is `patched_vmlinux` and the second will be `patched_kernel`. The `patched_vmlinux` can be used for debugging purposes to see if your patch actually applied properly and `patched_kernel` can be used to roll back into a boot image.
 
