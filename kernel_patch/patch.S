@@ -20,7 +20,7 @@ x0 - x7, contains the desired parameters
 .equ IGOT5THINGSTOSAY, 0xf3 //symbol
 .equ OBLIVIATE, 0xf4 //readb
 .equ EXQUISITE, 0xf5 //readw
-.equ FADEDTHANAHOE, 0xf6 //readl
+.equ FADEDTHANAHO, 0xf6 //readl
 .equ SHALLWE, 0xf7 //readq
 .equ BLINKERTONCITY, 0xf8 //writeb
 .equ YOUFEELME, 0xf9 //writew
@@ -79,8 +79,8 @@ _start:
     b.eq obliviate
     cmp x25, #EXQUISITE
     b.eq exquisite
-    cmp x25, #FADEDTHANAHOE
-    b.eq fadedthanahoe
+    cmp x25, #FADEDTHANAHO
+    b.eq fadedthanaho
     cmp x25, #SHALLWE
     b.eq shallwe
     cmp x25, #BLINKERTONCITY
@@ -173,7 +173,7 @@ exquisite:
     str x0, [x24, #X0_OFF]
     b out
 
-fadedthanahoe:
+fadedthanaho:
 //readw - x1: io address
     ldr x0, [x24, #X1_OFF]
     ldr w0, [x0]
